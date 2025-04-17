@@ -2,6 +2,7 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>惡靈古堡：網頁試煉</title>
   <style>
     body {
@@ -78,15 +79,6 @@
       color: #ffcc00;
     }
 
-    .hidden {
-      display: none;
-    }
-
-    #game-info {
-      margin-top: 20px;
-      text-align: center;
-    }
-
     .fadeIn {
       animation: fadeIn 2s ease-in-out;
     }
@@ -96,6 +88,45 @@
       100% { opacity: 1; }
     }
 
+    #damageEffect {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(255, 0, 0, 0.4);
+      z-index: 1000;
+      display: none;
+      animation: damageFlash 0.3s ease-in-out;
+    }
+
+    @keyframes damageFlash {
+      0% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+
+    #jill {
+      position: absolute;
+      bottom: 10px;
+      left: 0;
+      height: 150px;
+      transition: left 2s;
+      z-index: 10;
+    }
+
+    @media screen and (orientation: landscape) {
+      body::after {
+        content: "請旋轉裝置為直式模式以獲得最佳體驗";
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0,0,0,0.9);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        z-index: 9999;
+      }
+    }
   </style>
 </head>
 <body>
@@ -106,16 +137,21 @@
       <button onclick="explore()">探索房間</button>
       <button onclick="fight()">與怪物戰鬥</button>
       <button onclick="escape()">逃跑</button>
+      <button onclick="restartGame()">重新開始</button>
     </div>
     <p>血量：<span id="hp">100</span></p>
     <div id="inventory">
       <strong>背包：</strong> <span id="bag">空</span>
     </div>
   </div>
+  <div id="damageEffect"></div>
+  <img id="jill" src="https://i.imgur.com/KVd0K6U.png" alt="Jill">
 
   <audio id="bgm" autoplay loop>
     <source src="https://freesound.org/data/previews/415/415209_5121236-lq.mp3" type="audio/mp3">
   </audio>
+  <audio id="pickupSound" src="https://freesound.org/data/previews/146/146721_2558340-lq.mp3"></audio>
+  <audio id="attackSound" src="https://freesound.org/data/previews/178/178186_2859978-lq.mp3"></audio>
 
   <script>
     let hp = 100;
@@ -125,6 +161,17 @@
       document.getElementById("text").textContent = text;
       document.getElementById("hp").textContent = hp;
       document.getElementById("bag").textContent = bag.length ? bag.join(", ") : "空";
+    }
+
+    function playSound(id) {
+      const sound = document.getElementById(id);
+      if (sound) sound.play();
+    }
+
+    function showDamageEffect() {
+      const effect = document.getElementById("damageEffect");
+      effect.style.display = "block";
+      setTimeout(() => { effect.style.display = "none"; }, 300);
     }
 
     function explore() {
@@ -138,10 +185,14 @@
       if (event.includes("藥草")) {
         hp = Math.min(hp + 10, 100);
         bag.push("綠色藥草");
+        playSound("pickupSound");
       } else if (event.includes("手槍")) {
         bag.push("手槍");
+        playSound("pickupSound");
       } else if (event.includes("喪屍")) {
         hp -= 20;
+        showDamageEffect();
+        playSound("attackSound");
       }
       updateUI(event);
     }
@@ -149,17 +200,37 @@
     function fight() {
       if (bag.includes("手槍")) {
         updateUI("你使用手槍射擊，成功擊退怪物！");
+        playSound("attackSound");
       } else {
         hp -= 30;
         updateUI("你沒有武器，被怪物重擊！損失30點血！");
+        showDamageEffect();
+        playSound("attackSound");
       }
     }
 
     function escape() {
       const result = Math.random() < 0.5 ? "你逃跑成功！" : "你被抓住，損失10點血。";
-      if (result.includes("損失")) hp -= 10;
+      if (result.includes("損失")) {
+        hp -= 10;
+        showDamageEffect();
+        playSound("attackSound");
+      }
       updateUI(result);
     }
+
+    function restartGame() {
+      hp = 100;
+      bag = [];
+      updateUI("你重新開始了冒險，仍然身處詭異的醫院...");
+    }
+
+    function randomMoveJill() {
+      const jill = document.getElementById("jill");
+      const newLeft = Math.random() * (window.innerWidth - 150) + "px";
+      jill.style.left = newLeft;
+    }
+    setInterval(randomMoveJill, 3000);
   </script>
 </body>
 </html>
