@@ -1,236 +1,153 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>惡靈古堡：網頁試煉</title>
+  <title>SCP：極限戰境 - 假面特工休</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
-      background-color: #2e2e2e;
-      color: #e0e0e0;
-      font-family: "微軟正黑體", sans-serif;
+      margin: 0;
+      padding: 0;
+      font-family: 'Courier New', monospace;
+      background-color: #111;
+      color: #eee;
+    }
+    .container {
+      max-width: 960px;
+      margin: auto;
       padding: 20px;
-      background-image: url('https://i.imgur.com/1g6UupB.jpg');
-      background-size: cover;
-      background-attachment: fixed;
-      background-position: center;
-      animation: bgAnimation 30s infinite linear;
-      overflow: hidden;
     }
-
-    @keyframes bgAnimation {
-      0% { background-position: center; }
-      50% { background-position: right; }
-      100% { background-position: center; }
-    }
-
-    h1 {
-      text-align: center;
-      font-size: 4rem;
-      color: #ffcc00;
-      text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.7);
-      font-family: 'Arial', sans-serif;
-    }
-
-    #story {
-      background: rgba(0, 0, 0, 0.8);
-      padding: 25px;
-      border-radius: 20px;
-      margin-bottom: 30px;
-      box-shadow: 0 0 25px rgba(0, 0, 0, 0.8);
-      font-size: 1.3rem;
-      line-height: 1.8;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    p {
-      font-size: 1.4rem;
-      line-height: 1.8;
-    }
-
-    button {
-      margin: 15px;
-      padding: 18px 35px;
-      background: linear-gradient(145deg, #3b3b3b, #1a1a1a);
-      color: #fff;
+    .option-button {
+      background-color: #444;
       border: none;
-      border-radius: 12px;
-      font-size: 1.2rem;
-      text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 10px 20px;
+      margin: 10px 0;
       cursor: pointer;
-      transition: all 0.3s ease-in-out;
+      font-size: 1em;
     }
-
-    button:hover {
-      transform: scale(1.1);
-      background: linear-gradient(145deg, #555555, #333333);
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+    .option-button:hover {
+      background-color: #666;
     }
-
-    button:active {
-      transform: scale(1);
-      box-shadow: none;
+    .game-image {
+      width: 100%;
+      height: auto;
     }
-
-    #inventory {
-      margin-top: 20px;
-      font-size: 1.2rem;
-      color: #ffcc00;
+    #background {
+      background-size: cover;
+      height: 400px;
+      background-image: url('https://via.placeholder.com/960x400/111/eee?text=Background+Image');
     }
-
-    .fadeIn {
-      animation: fadeIn 2s ease-in-out;
+    #character {
+      width: 200px;
+      height: auto;
+      display: block;
+      margin: 20px auto;
+      border-radius: 10px;
     }
-
-    @keyframes fadeIn {
-      0% { opacity: 0; }
-      100% { opacity: 1; }
-    }
-
-    #damageEffect {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(255, 0, 0, 0.4);
-      z-index: 1000;
-      display: none;
-      animation: damageFlash 0.3s ease-in-out;
-    }
-
-    @keyframes damageFlash {
-      0% { opacity: 1; }
-      100% { opacity: 0; }
-    }
-
-    #jill {
+    #musicControl {
       position: absolute;
-      bottom: 10px;
-      left: 0;
-      height: 150px;
-      transition: left 2s;
-      z-index: 10;
+      top: 10px;
+      right: 10px;
+      background-color: #222;
+      color: white;
+      padding: 5px;
+      cursor: pointer;
     }
-
-    @media screen and (orientation: landscape) {
-      body::after {
-        content: "請旋轉裝置為直式模式以獲得最佳體驗";
-        position: fixed;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        background: rgba(0,0,0,0.9);
-        color: #fff;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2rem;
-        z-index: 9999;
-      }
+    select {
+      background-color: #444;
+      color: white;
+      padding: 5px;
+      font-size: 1em;
     }
   </style>
 </head>
 <body>
-  <h1>惡靈古堡：網頁試煉</h1>
-  <div id="story" class="fadeIn">
-    <p id="text">你醒來在一棟廢棄醫院，外頭傳來奇怪的聲音...</p>
-    <div id="buttons">
-      <button onclick="explore()">探索房間</button>
-      <button onclick="fight()">與怪物戰鬥</button>
-      <button onclick="escape()">逃跑</button>
-      <button onclick="restartGame()">重新開始</button>
-    </div>
-    <p>血量：<span id="hp">100</span></p>
-    <div id="inventory">
-      <strong>背包：</strong> <span id="bag">空</span>
-    </div>
+  <div id="background"></div>
+  <div class="container">
+    <h1>SCP：極限戰境 - 假面特工休</h1>
+    <img id="character" src="https://i.ytimg.com/vi/z8zIWOP6UhY/maxresdefault.jpg" alt="SCP-173">
+    <div id="story"></div>
+    <div id="options"></div>
+    <div id="musicControl" onclick="toggleMusic()">🔊 音樂開 / 關</div>
+    <label for="language">選擇語言: </label>
+    <select id="language" onchange="changeLanguage()">
+      <option value="zh-Hant">繁體中文</option>
+      <option value="en">English</option>
+    </select>
   </div>
-  <div id="damageEffect"></div>
-  <img id="jill" src="https://i.imgur.com/KVd0K6U.png" alt="Jill">
 
-  <audio id="bgm" autoplay loop>
-    <source src="https://freesound.org/data/previews/415/415209_5121236-lq.mp3" type="audio/mp3">
+  <audio id="backgroundMusic" loop>
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mp3">
+    Your browser does not support the audio element.
   </audio>
-  <audio id="pickupSound" src="https://freesound.org/data/previews/146/146721_2558340-lq.mp3"></audio>
-  <audio id="attackSound" src="https://freesound.org/data/previews/178/178186_2859978-lq.mp3"></audio>
 
   <script>
-    let hp = 100;
-    let bag = [];
+    const storyElement = document.getElementById('story');
+    const optionsElement = document.getElementById('options');
+    const languageSelect = document.getElementById('language');
+    const backgroundMusic = document.getElementById('backgroundMusic');
+    const characterImage = document.getElementById('character');
 
-    function updateUI(text) {
-      document.getElementById("text").textContent = text;
-      document.getElementById("hp").textContent = hp;
-      document.getElementById("bag").textContent = bag.length ? bag.join(", ") : "空";
-    }
-
-    function playSound(id) {
-      const sound = document.getElementById(id);
-      if (sound) sound.play();
-    }
-
-    function showDamageEffect() {
-      const effect = document.getElementById("damageEffect");
-      effect.style.display = "block";
-      setTimeout(() => { effect.style.display = "none"; }, 300);
-    }
-
-    function explore() {
-      const events = [
-        "你發現一瓶綠色藥草，回復10點血量。",
-        "你撿到一把手槍。",
-        "一隻喪屍突然撲向你！你損失20點血。",
-        "這裡什麼也沒有，只有冷風..."
-      ];
-      let event = events[Math.floor(Math.random() * events.length)];
-      if (event.includes("藥草")) {
-        hp = Math.min(hp + 10, 100);
-        bag.push("綠色藥草");
-        playSound("pickupSound");
-      } else if (event.includes("手槍")) {
-        bag.push("手槍");
-        playSound("pickupSound");
-      } else if (event.includes("喪屍")) {
-        hp -= 20;
-        showDamageEffect();
-        playSound("attackSound");
-      }
-      updateUI(event);
-    }
-
-    function fight() {
-      if (bag.includes("手槍")) {
-        updateUI("你使用手槍射擊，成功擊退怪物！");
-        playSound("attackSound");
-      } else {
-        hp -= 30;
-        updateUI("你沒有武器，被怪物重擊！損失30點血！");
-        showDamageEffect();
-        playSound("attackSound");
-      }
-    }
-
-    function escape() {
-      const result = Math.random() < 0.5 ? "你逃跑成功！" : "你被抓住，損失10點血。";
-      if (result.includes("損失")) {
-        hp -= 10;
-        showDamageEffect();
-        playSound("attackSound");
-      }
-      updateUI(result);
-    }
-
-    function restartGame() {
-      hp = 100;
-      bag = [];
-      updateUI("你重新開始了冒險，仍然身處詭異的醫院...");
-    }
-
-    function randomMoveJill() {
-      const jill = document.getElementById("jill");
-      const newLeft = Math.random() * (window.innerWidth - 150) + "px";
-      jill.style.left = newLeft;
-    }
-    setInterval(randomMoveJill, 3000);
-  </script>
-</body>
-</html>
+    const storyNodes = {
+      start: {
+        text: "你是特工休·拉弗格，SCP 基金會的秘密行動人員。收容失效發生，你身處 Site-17 地下層。前方是兩條走廊。",
+        options: [
+          { text: "前往東側 SCP 收容室", next: "scpRoom", image: "https://i.ytimg.com/vi/z8zIWOP6UhY/maxresdefault.jpg" },  // SCP-173
+          { text: "向西走到控制室", next: "controlRoom", image: "https://truth.bahamut.com.tw/s01/201608/ecf5bd4589f1d4015d42732177c08655.JPG" }  // SCP-049
+        ]
+      },
+      scpRoom: {
+        text: "你走進東側的 SCP 收容區，警報聲刺耳。門後傳來劇烈敲擊聲。",
+        options: [
+          { text: "開門查看", next: "encounter096", image: "https://i.ytimg.com/vi/yA3CHMyyHZ8/maxresdefault.jpg" },  // SCP-096
+          { text: "退後離開", next: "retreat", image: "https://truth.bahamut.com.tw/s01/201608/ecf5bd4589f1d4015d42732177c08655.JPG" }  // SCP-049
+        ]
+      },
+      controlRoom: {
+        text: "你到達控制室，螢幕顯示 SCP-173 失控中。系統顯示需要輸入緊急密碼。",
+        options: [
+          { text: "輸入密碼 1234", next: "wrongCode", image: "https://truth.bahamut.com.tw/s01/201608/ecf5bd4589f1d4015d42732177c08655.JPG" },  // SCP-049
+          { text: "輸入密碼 A17X", next: "containSuccess", image: "https://i.ytimg.com/vi/z8zIWOP6UhY/maxresdefault.jpg" }  // SCP-173
+        ]
+      },
+      encounter096: {
+        text: "你看見一個瘦高的 humanoid 正哭泣。它抬頭看見你——SCP-096 瘋狂衝來！",
+        options: [
+          { text: "嘗試逃跑", next: "death", image: "https://i.ytimg.com/vi/yA3CHMyyHZ8/maxresdefault.jpg" },  // SCP-096
+          { text: "引爆手榴彈", next: "sacrifice", image: "https://truth.bahamut.com.tw/s01/201608/ecf5bd4589f1d4015d42732177c08655.JPG" }  // SCP-049
+        ]
+      },
+      retreat: {
+        text: "你安全返回交叉口，但SCP-049 出現在你背後……他伸出手：'你需要治療。'",
+        options: [
+          { text: "戰鬥", next: "death", image: "https://truth.bahamut.com.tw/s01/201608/ecf5bd4589f1d4015d42732177c08655.JPG" },  // SCP-049
+          { text: "假裝感染", next: "trick049", image: "https://truth.bahamut.com.tw/s01/201608/ecf5bd4589f1d4015d42732177c08655.JPG" }  // SCP-049
+        ]
+      },
+      wrongCode: {
+        text: "系統顯示錯誤。SCP-173 突然出現在你背後，一切陷入黑暗。",
+        options: [
+          { text: "重新開始", next: "start", image: "https://i.ytimg.com/vi/z8zIWOP6UhY/maxresdefault.jpg" }  // SCP-173
+        ]
+      },
+      containSuccess: {
+        text: "你成功啟動收容機制，至少暫時安全。你贏了這一回合。",
+        options: [
+          { text: "重新開始冒險", next: "start", image: "https://i.ytimg.com/vi/z8zIWOP6UhY/maxresdefault.jpg" }  // SCP-173
+        ]
+      },
+      death: {
+        text: "你遭遇致命危機，無法倖免。",
+        options: [
+          { text: "重新開始", next: "start", image: "https://i.ytimg.com/vi/z8zIWOP6UhY/maxresdefault.jpg" }  // SCP-173
+        ]
+      },
+      sacrifice: {
+        text: "你與 SCP-096 同歸於盡。英雄式犧牲。",
+        options: [
+          { text: "重新開始", next: "start", image: "https://i.ytimg.com/vi/z8zIWOP6UhY/maxresdefault.jpg" }  // SCP-173
+        ]
+      },
+      trick049: {
+        text: "SCP-049 相信你患病，將你拖入研究室……你暫時
