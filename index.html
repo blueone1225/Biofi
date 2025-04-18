@@ -1,18 +1,15 @@
-﻿
-
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-TW">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SCP：極限戰境 - 假面特工休</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
-      margin: 0;
-      padding: 0;
       font-family: 'Courier New', monospace;
       background-color: #111;
       color: #eee;
+      padding: 20px;
     }
     .container {
       max-width: 960px;
@@ -62,6 +59,51 @@
       padding: 5px;
       font-size: 1em;
     }
+    #uploadSection, #commentSection {
+      margin-top: 40px;
+      background-color: #222;
+      padding: 20px;
+      border-radius: 10px;
+    }
+    input[type="file"], textarea {
+      width: 100%;
+      margin-top: 10px;
+      padding: 10px;
+      font-size: 1em;
+      background-color: #333;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+    #commentList {
+      margin-top: 10px;
+    }
+    .comment {
+      background-color: #333;
+      margin: 5px 0;
+      padding: 10px;
+      border-radius: 5px;
+    }
+    .preview {
+      max-width: 100px;
+      max-height: 100px;
+      margin-top: 10px;
+    }
+    .message {
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin: 10px 0;
+      position: relative;
+    }
+    .delete-btn {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background: red;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -77,6 +119,24 @@
       <option value="zh-Hant">繁體中文</option>
       <option value="en">English</option>
     </select>
+
+   
+
+    <div id="commentSection">
+      <h2>💬 留言區</h2>
+      <label>名字：</label>
+      <input type="text" id="name" /><br><br>
+
+      <label>留言內容：</label><br>
+      <textarea id="comment" rows="4" cols="40"></textarea><br><br>
+
+      <label>上傳圖片：</label>
+      <input type="file" id="imageUpload" accept="image/*" /><br>
+      <img id="preview" class="preview" src="" alt="預覽圖" style="display:none;"><br><br>
+
+      <button onclick="addMessage()">送出留言</button>
+      <div id="messageBoard"></div>
+    </div>
   </div>
 
   <audio id="backgroundMusic" loop>
@@ -95,83 +155,88 @@
       start: {
         text: "你是特工休·拉弗格，SCP 基金會的秘密行動人員。收容失效發生，你身處 Site-17 地下層。前方是兩條走廊。",
         options: [
-          { text: "前往東側 SCP 收容室", next: "scpRoom", image: "https://i.ytimg.com/vi/z8zIWOP6UhY/maxresdefault.jpg" },  // SCP-173
-          { text: "向西走到控制室", next: "controlRoom", image: "https://truth.bahamut.com.tw/s01/201608/ecf5bd4589f1d4015d42732177c08655.JPG" }  // SCP-049
+          { text: "前往東側 SCP 收容室", next: "scpRoom", image: "https://i.ytimg.com/vi/z8zIWOP6UhY/maxresdefault.jpg" },
+          { text: "向西走到控制室", next: "controlRoom", image: "https://truth.bahamut.com.tw/s01/201608/ecf5bd4589f1d4015d42732177c08655.JPG" }
         ]
       },
       scpRoom: {
         text: "你走進東側的 SCP 收容區，警報聲刺耳。門後傳來劇烈敲擊聲。",
         options: [
-          { text: "開門查看", next: "encounter096", image: "https://i.ytimg.com/vi/yA3CHMyyHZ8/maxresdefault.jpg" },  // SCP-096
-          { text: "退後離開", next: "retreat", image: "https://truth.bahamut.com.tw/s01/201608/ecf5bd4589f1d4015d42732177c08655.JPG" }  // SCP-049
+          { text: "開門查看", next: "encounter096", image: "https://i.ytimg.com/vi/yA3CHMyyHZ8/maxresdefault.jpg" },
+          { text: "退後離開", next: "retreat", image: "https://truth.bahamut.com.tw/s01/201608/ecf5bd4589f1d4015d42732177c08655.JPG" }
         ]
       },
       controlRoom: {
         text: "你到達控制室，螢幕顯示 SCP-173 失控中。系統顯示需要輸入緊急密碼。",
         options: [
-          { text: "輸入密碼 1234", next: "wrongCode", image: "https://truth.bahamut.com.tw/s01/201608/ecf5bd4589f1d4015d42732177c08655.JPG" },  // SCP-049
-          { text: "輸入密碼 A17X", next: "containSuccess", image: "https://i.ytimg.com/vi/z8zIWOP6UhY/maxresdefault.jpg" }  // SCP-173
+          { text: "輸入密碼 1234", next: "wrongCode", image: "https://truth.bahamut.com.tw/s01/201608/ecf5bd4589f1d4015d42732177c08655.JPG" },
+          { text: "輸入密碼 A17X", next: "containSuccess", image: "https://i.ytimg.com/vi/z8zIWOP6UhY/maxresdefault.jpg" }
         ]
       },
       encounter096: {
         text: "你看見一個瘦高的 humanoid 正哭泣。它抬頭看見你——SCP-096 瘋狂衝來！",
         options: [
-          { text: "嘗試逃跑", next: "death", image: "https://i.ytimg.com/vi/yA3CHMyyHZ8/maxresdefault.jpg" },  // SCP-096
-          { text: "引爆手榴彈", next: "sacrifice", image: "https://truth.bahamut.com.tw/s01/201608/ecf5bd4589f1d4015d42732177c08655.JPG" }  // SCP-049
+          { text: "嘗試逃跑", next: "death", image: "https://i.ytimg.com/vi/yA3CHMyyHZ8/maxresdefault.jpg" },
+          { text: "引爆手榴彈", next: "sacrifice", image: "https://truth.bahamut.com.tw/s01/201608/ecf5bd4589f1d4015d42732177c08655.JPG" }
         ]
       },
       retreat: {
         text: "你安全返回交叉口，但SCP-049 出現在你背後……他伸出手：'你需要治療。'",
         options: [
-          { text: "戰鬥", next: "death", image: "https://truth.bahamut.com.tw/s01/201608/ecf5bd4589f1d4015d42732177c08655.JPG" },  // SCP-049
-          { text: "假裝感染", next: "trick049", image: "https://truth.bahamut.com.tw/s01/201608/ecf5bd4589f1d4015d42732177c08655.JPG" }  // SCP-049
+          { text: "戰鬥", next: "death", image: "https://truth.bahamut.com.tw/s01/201608/ecf5bd4589f1d4015d42732177c08655.JPG" },
+          { text: "假裝感染", next: "trick049", image: "https://truth.bahamut.com.tw/s01/201608/ecf5bd4589f1d4015d42732177c08655.JPG" }
         ]
       },
       wrongCode: {
         text: "系統顯示錯誤。SCP-173 突然出現在你背後，一切陷入黑暗。",
         options: [
-          { text: "重新開始", next: "start", image: "https://i.ytimg.com/vi/z8zIWOP6UhY/maxresdefault.jpg" }  // SCP-173
+          { text: "重新開始", next: "start", image: "https://i.ytimg.com/vi/z8zIWOP6UhY/maxresdefault.jpg" }
         ]
       },
       containSuccess: {
-        text: "你成功啟動收容機制，至少暫時安全。你贏了這一回合。",
+        text: "系統顯示 SCP-173 已被成功收容，但警報聲變得越來越大……",
         options: [
-          { text: "重新開始冒險", next: "start", image: "https://i.ytimg.com/vi/z8zIWOP6UhY/maxresdefault.jpg" }  // SCP-173
+          { text: "跟隨逃生通道", next: "escape", image: "https://i.ytimg.com/vi/yA3CHMyyHZ8/maxresdefault.jpg" }
         ]
       },
       death: {
-        text: "你遭遇致命危機，無法倖免。",
+        text: "你被 SCP-096 或 SCP-049 終結了生命。遊戲結束。",
         options: [
-          { text: "重新開始", next: "start", image: "https://i.ytimg.com/vi/z8zIWOP6UhY/maxresdefault.jpg" }  // SCP-173
+          { text: "重新開始", next: "start", image: "https://truth.bahamut.com.tw/s01/201608/ecf5bd4589f1d4015d42732177c08655.JPG" }
         ]
       },
-      sacrifice: {
-        text: "你與 SCP-096 同歸於盡。英雄式犧牲。",
-        options: [
-          { text: "重新開始", next: "start", image: "https://i.ytimg.com/vi/z8zIWOP6UhY/maxresdefault.jpg" }  // SCP-173
-        ]
-      },
-      trick049: {
-        text: "SCP-049 相信你患病，將你拖入研究室……你暫時倖存。",
-        options: [
-          { text: "重新開始", next: "start", image: "https://truth.bahamut.com.tw/s01/201608/ecf5bd4589f1d4015d42732177c08655.JPG" }  // SCP-049
-        ]
+      escape: {
+        text: "你成功逃脫，但 SCPF 仍在追捕你……",
+        options: []
       }
     };
 
-    function showNode(nodeKey) {
-      const node = storyNodes[nodeKey];
-      storyElement.textContent = node.text;
-      optionsElement.innerHTML = '';
-      characterImage.src = node.options[0].image; // 更新圖片
+    let currentNode = 'start';
 
-      node.options.forEach(option => {
+    function changeLanguage() {
+      const selectedLang = languageSelect.value;
+      alert(`語言已更改為：${selectedLang}`);
+    }
+
+    function renderStory(node) {
+      const currentStory = storyNodes[node];
+      storyElement.textContent = currentStory.text;
+      optionsElement.innerHTML = '';
+      currentStory.options.forEach(option => {
         const button = document.createElement('button');
         button.textContent = option.text;
-        button.className = 'option-button';
-        button.onclick = () => showNode(option.next);
+        button.classList.add('option-button');
+        button.onclick = () => changeNode(option.next);
         optionsElement.appendChild(button);
       });
+      if (currentStory.image) {
+        characterImage.src = currentStory.image;
+      }
+    }
+
+    function changeNode(node) {
+      currentNode = node;
+      renderStory(node);
     }
 
     function toggleMusic() {
@@ -182,17 +247,48 @@
       }
     }
 
-    function changeLanguage() {
-      if (languageSelect.value === 'en') {
-        storyNodes.start.text = "You are Agent Hugh LaForge, an SCP Foundation field operative. A containment breach has occurred, and you're in the underground level of Site-17. There are two corridors ahead.";
-        showNode('start');
-      } else {
-        storyNodes.start.text = "你是特工休·拉弗格，SCP 基金會的秘密行動人員。收容失效發生，你身處 Site-17 地下層。前方是兩條走廊。";
-        showNode('start');
+    function addMessage() {
+      const name = document.getElementById('name').value;
+      const comment = document.getElementById('comment').value;
+      const previewImage = document.getElementById('preview').src;
+
+      if (!name || !comment) {
+        alert('請填寫名字和留言內容');
+        return;
       }
+
+      const messageBoard = document.getElementById('messageBoard');
+      const newMessage = document.createElement('div');
+      newMessage.classList.add('message');
+
+      newMessage.innerHTML = `<strong>${name}</strong>: <p>${comment}</p>`;
+      if (previewImage) {
+        newMessage.innerHTML += `<img src="${previewImage}" class="preview" />`;
+      }
+
+      const deleteButton = document.createElement('button');
+      deleteButton.classList.add('delete-btn');
+      deleteButton.textContent = '刪除';
+      deleteButton.onclick = () => newMessage.remove();
+      newMessage.appendChild(deleteButton);
+
+      messageBoard.appendChild(newMessage);
+      document.getElementById('name').value = '';
+      document.getElementById('comment').value = '';
+      document.getElementById('imageUpload').value = '';
+      document.getElementById('preview').style.display = 'none';
     }
 
-    showNode('start');
+    document.getElementById('imageUpload').addEventListener('change', function(e) {
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        document.getElementById('preview').src = event.target.result;
+        document.getElementById('preview').style.display = 'block';
+      };
+      reader.readAsDataURL(e.target.files[0]);
+    });
+
+    renderStory(currentNode);
   </script>
 </body>
 </html>
