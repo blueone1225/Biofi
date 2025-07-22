@@ -1,294 +1,162 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SCP：極限戰境 - 假面特工休</title>
-  <style>
-    body {
-      font-family: 'Courier New', monospace;
-      background-color: #111;
-      color: #eee;
-      padding: 20px;
-    }
-    .container {
-      max-width: 960px;
-      margin: auto;
-      padding: 20px;
-    }
-    .option-button {
-      background-color: #444;
-      border: none;
-      color: white;
-      padding: 10px 20px;
-      margin: 10px 0;
-      cursor: pointer;
-      font-size: 1em;
-    }
-    .option-button:hover {
-      background-color: #666;
-    }
-    .game-image {
-      width: 100%;
-      height: auto;
-    }
-    #background {
-      background-size: cover;
-      height: 400px;
-      background-image: url('https://via.placeholder.com/960x400/111/eee?text=Background+Image');
-    }
-    #character {
-      width: 200px;
-      height: auto;
-      display: block;
-      margin: 20px auto;
-      border-radius: 10px;
-    }
-    #musicControl {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background-color: #222;
-      color: white;
-      padding: 5px;
-      cursor: pointer;
-    }
-    select {
-      background-color: #444;
-      color: white;
-      padding: 5px;
-      font-size: 1em;
-    }
-    #uploadSection, #commentSection {
-      margin-top: 40px;
-      background-color: #222;
-      padding: 20px;
-      border-radius: 10px;
-    }
-    input[type="file"], textarea {
-      width: 100%;
-      margin-top: 10px;
-      padding: 10px;
-      font-size: 1em;
-      background-color: #333;
-      color: white;
-      border: none;
-      border-radius: 5px;
-    }
-    #commentList {
-      margin-top: 10px;
-    }
-    .comment {
-      background-color: #333;
-      margin: 5px 0;
-      padding: 10px;
-      border-radius: 5px;
-    }
-    .preview {
-      max-width: 100px;
-      max-height: 100px;
-      margin-top: 10px;
-    }
-    .message {
-      border: 1px solid #ccc;
-      padding: 10px;
-      margin: 10px 0;
-      position: relative;
-    }
-    .delete-btn {
-      position: absolute;
-      top: 5px;
-      right: 5px;
-      background: red;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>網站開發方案試算</title>
+<style>
+  body {
+    background-color: #111827;
+    color: #e0f2fe;
+    font-family: 'Segoe UI', sans-serif;
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 0 30px rgba(0,255,255,0.1);
+  }
+
+  h2 {
+    text-align: center;
+    color: #7dd3fc;
+  }
+
+  label {
+    margin-top: 15px;
+    display: block;
+    font-weight: bold;
+  }
+
+  select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    font-size: 16px;
+    background-color: #1f2937;
+    color: #e0f2fe;
+    border: 1px solid #38bdf8;
+    border-radius: 6px;
+  }
+
+  .plan-details {
+    background: #1e293b;
+    padding: 12px;
+    border-radius: 8px;
+    margin-top: 15px;
+    border-left: 4px solid #38bdf8;
+  }
+
+  .result {
+    margin-top: 30px;
+    background-color: #1e2a40;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px dashed #7dd3fc;
+  }
+
+  .result p {
+    margin: 8px 0;
+    font-size: 16px;
+  }
+
+  .highlight {
+    font-size: 20px;
+    color: #38f2ff;
+    font-weight: bold;
+  }
+</style>
 </head>
 <body>
-  <div id="background"></div>
-  <div class="container">
-    <h1>SCP：極限戰境 - 假面特工休</h1>
-    <img id="character" src="https://i.ytimg.com/vi/z8zIWOP6UhY/maxresdefault.jpg" alt="SCP-173">
-    <div id="story"></div>
-    <div id="options"></div>
-    <div id="musicControl" onclick="toggleMusic()">🔊 音樂開 / 關</div>
-    <label for="language">選擇語言: </label>
-    <select id="language" onchange="changeLanguage()">
-      <option value="zh-Hant">繁體中文</option>
-      <option value="en">English</option>
-    </select>
 
-   
+<h2>💻 網站開發費用試算</h2>
 
-    <div id="commentSection">
-      <h2>💬 留言區</h2>
-      <label>名字：</label>
-      <input type="text" id="name" /><br><br>
+<label for="plan">請選擇方案：</label>
+<select id="plan">
+  <option value="A">A 方案（NT$ 15,000）</option>
+  <option value="B">B 方案（NT$ 25,000）</option>
+  <option value="C">C 方案（NT$ 45,000）</option>
+</select>
 
-      <label>留言內容：</label><br>
-      <textarea id="comment" rows="4" cols="40"></textarea><br><br>
+<div class="plan-details" id="planDescription">
+  👉 選擇方案後，這裡會顯示開發內容說明。
+</div>
 
-      <label>上傳圖片：</label>
-      <input type="file" id="imageUpload" accept="image/*" /><br>
-      <img id="preview" class="preview" src="" alt="預覽圖" style="display:none;"><br><br>
+<label for="discount">折扣選擇：</label>
+<select id="discount">
+  <option value="1">無折扣（100%）</option>
+  <option value="0.9">9 折（90%）</option>
+  <option value="0.85">85 折（85%）</option>
+  <option value="0.8">8 折（80%）</option>
+</select>
 
-      <button onclick="addMessage()">送出留言</button>
-      <div id="messageBoard"></div>
-    </div>
-  </div>
+<label for="shipping">交付管理費（元）：</label>
+<select id="shipping">
+  <option value="0">免收</option>
+  <option value="200">NT$200</option>
+  <option value="500">NT$500（含部署 + 技術驗收）</option>
+</select>
 
-  <audio id="backgroundMusic" loop>
-    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mp3">
-    Your browser does not support the audio element.
-  </audio>
+<div class="result" id="result">
+  <p>原價：NT$ <span id="originalPrice">15000</span></p>
+  <p>折扣後：NT$ <span id="discountedPrice">15000</span></p>
+  <p>節省金額：NT$ <span id="savedAmount">0</span></p>
+  <p>運費：NT$ <span id="shippingCost">0</span></p>
+  <hr />
+  <p class="highlight">總計：NT$ <span id="finalTotal">15000</span></p>
+</div>
 
-  <script>
-    const storyElement = document.getElementById('story');
-    const optionsElement = document.getElementById('options');
-    const languageSelect = document.getElementById('language');
-    const backgroundMusic = document.getElementById('backgroundMusic');
-    const characterImage = document.getElementById('character');
+<script>
+  const planSelect = document.getElementById('plan');
+  const discountSelect = document.getElementById('discount');
+  const shippingSelect = document.getElementById('shipping');
 
-    const storyNodes = {
-      start: {
-        text: "你是特工休·拉弗格，SCP 基金會的秘密行動人員。收容失效發生，你身處 Site-17 地下層。前方是兩條走廊。",
-        options: [
-          { text: "前往東側 SCP 收容室", next: "scpRoom", image: "https://i.ytimg.com/vi/z8zIWOP6UhY/maxresdefault.jpg" },
-          { text: "向西走到控制室", next: "controlRoom", image: "https://truth.bahamut.com.tw/s01/201608/ecf5bd4589f1d4015d42732177c08655.JPG" }
-        ]
-      },
-      scpRoom: {
-        text: "你走進東側的 SCP 收容區，警報聲刺耳。門後傳來劇烈敲擊聲。",
-        options: [
-          { text: "開門查看", next: "encounter096", image: "https://i.ytimg.com/vi/yA3CHMyyHZ8/maxresdefault.jpg" },
-          { text: "退後離開", next: "retreat", image: "https://truth.bahamut.com.tw/s01/201608/ecf5bd4589f1d4015d42732177c08655.JPG" }
-        ]
-      },
-      controlRoom: {
-        text: "你到達控制室，螢幕顯示 SCP-173 失控中。系統顯示需要輸入緊急密碼。",
-        options: [
-          { text: "輸入密碼 1234", next: "wrongCode", image: "https://truth.bahamut.com.tw/s01/201608/ecf5bd4589f1d4015d42732177c08655.JPG" },
-          { text: "輸入密碼 A17X", next: "containSuccess", image: "https://i.ytimg.com/vi/z8zIWOP6UhY/maxresdefault.jpg" }
-        ]
-      },
-      encounter096: {
-        text: "你看見一個瘦高的 humanoid 正哭泣。它抬頭看見你——SCP-096 瘋狂衝來！",
-        options: [
-          { text: "嘗試逃跑", next: "death", image: "https://i.ytimg.com/vi/yA3CHMyyHZ8/maxresdefault.jpg" },
-          { text: "引爆手榴彈", next: "sacrifice", image: "https://truth.bahamut.com.tw/s01/201608/ecf5bd4589f1d4015d42732177c08655.JPG" }
-        ]
-      },
-      retreat: {
-        text: "你安全返回交叉口，但SCP-049 出現在你背後……他伸出手：'你需要治療。'",
-        options: [
-          { text: "戰鬥", next: "death", image: "https://truth.bahamut.com.tw/s01/201608/ecf5bd4589f1d4015d42732177c08655.JPG" },
-          { text: "假裝感染", next: "trick049", image: "https://truth.bahamut.com.tw/s01/201608/ecf5bd4589f1d4015d42732177c08655.JPG" }
-        ]
-      },
-      wrongCode: {
-        text: "系統顯示錯誤。SCP-173 突然出現在你背後，一切陷入黑暗。",
-        options: [
-          { text: "重新開始", next: "start", image: "https://i.ytimg.com/vi/z8zIWOP6UhY/maxresdefault.jpg" }
-        ]
-      },
-      containSuccess: {
-        text: "系統顯示 SCP-173 已被成功收容，但警報聲變得越來越大……",
-        options: [
-          { text: "跟隨逃生通道", next: "escape", image: "https://i.ytimg.com/vi/yA3CHMyyHZ8/maxresdefault.jpg" }
-        ]
-      },
-      death: {
-        text: "你被 SCP-096 或 SCP-049 終結了生命。遊戲結束。",
-        options: [
-          { text: "重新開始", next: "start", image: "https://truth.bahamut.com.tw/s01/201608/ecf5bd4589f1d4015d42732177c08655.JPG" }
-        ]
-      },
-      escape: {
-        text: "你成功逃脫，但 SCPF 仍在追捕你……",
-        options: []
-      }
-    };
+  const planDescription = document.getElementById('planDescription');
+  const originalPrice = document.getElementById('originalPrice');
+  const discountedPrice = document.getElementById('discountedPrice');
+  const savedAmount = document.getElementById('savedAmount');
+  const shippingCost = document.getElementById('shippingCost');
+  const finalTotal = document.getElementById('finalTotal');
 
-    let currentNode = 'start';
-
-    function changeLanguage() {
-      const selectedLang = languageSelect.value;
-      alert(`語言已更改為：${selectedLang}`);
+  const planData = {
+    A: {
+      price: 15000,
+      desc: `📄 單頁形象網站：RWD 設計、靜態頁面、表單提交、簡單佈局。適合小型品牌快速上線。`
+    },
+    B: {
+      price: 25000,
+      desc: `📁 中型企業官網：多頁結構（約5頁）、後台管理系統、RWD 響應式設計、部落格模組、聯絡功能。`
+    },
+    C: {
+      price: 45000,
+      desc: `🛒 客製化平台 / 電商：完整前後台、會員系統、訂單處理、API 串接、後台數據管理。`
     }
+  };
 
-    function renderStory(node) {
-      const currentStory = storyNodes[node];
-      storyElement.textContent = currentStory.text;
-      optionsElement.innerHTML = '';
-      currentStory.options.forEach(option => {
-        const button = document.createElement('button');
-        button.textContent = option.text;
-        button.classList.add('option-button');
-        button.onclick = () => changeNode(option.next);
-        optionsElement.appendChild(button);
-      });
-      if (currentStory.image) {
-        characterImage.src = currentStory.image;
-      }
-    }
+  function update() {
+    const selectedPlan = planSelect.value;
+    const discountRate = parseFloat(discountSelect.value);
+    const shippingFee = parseFloat(shippingSelect.value);
 
-    function changeNode(node) {
-      currentNode = node;
-      renderStory(node);
-    }
+    const plan = planData[selectedPlan];
+    const price = plan.price;
+    const discounted = price * discountRate;
+    const saved = price - discounted;
+    const total = discounted + shippingFee;
 
-    function toggleMusic() {
-      if (backgroundMusic.paused) {
-        backgroundMusic.play();
-      } else {
-        backgroundMusic.pause();
-      }
-    }
+    planDescription.textContent = plan.desc;
+    originalPrice.textContent = price.toLocaleString();
+    discountedPrice.textContent = discounted.toLocaleString(undefined, {maximumFractionDigits: 0});
+    savedAmount.textContent = saved.toLocaleString(undefined, {maximumFractionDigits: 0});
+    shippingCost.textContent = shippingFee.toLocaleString();
+    finalTotal.textContent = total.toLocaleString(undefined, {maximumFractionDigits: 0});
+  }
 
-    function addMessage() {
-      const name = document.getElementById('name').value;
-      const comment = document.getElementById('comment').value;
-      const previewImage = document.getElementById('preview').src;
+  planSelect.addEventListener('change', update);
+  discountSelect.addEventListener('change', update);
+  shippingSelect.addEventListener('change', update);
 
-      if (!name || !comment) {
-        alert('請填寫名字和留言內容');
-        return;
-      }
+  update(); // 初始化
+</script>
 
-      const messageBoard = document.getElementById('messageBoard');
-      const newMessage = document.createElement('div');
-      newMessage.classList.add('message');
-
-      newMessage.innerHTML = `<strong>${name}</strong>: <p>${comment}</p>`;
-      if (previewImage) {
-        newMessage.innerHTML += `<img src="${previewImage}" class="preview" />`;
-      }
-
-      const deleteButton = document.createElement('button');
-      deleteButton.classList.add('delete-btn');
-      deleteButton.textContent = '刪除';
-      deleteButton.onclick = () => newMessage.remove();
-      newMessage.appendChild(deleteButton);
-
-      messageBoard.appendChild(newMessage);
-      document.getElementById('name').value = '';
-      document.getElementById('comment').value = '';
-      document.getElementById('imageUpload').value = '';
-      document.getElementById('preview').style.display = 'none';
-    }
-
-    document.getElementById('imageUpload').addEventListener('change', function(e) {
-      const reader = new FileReader();
-      reader.onload = function(event) {
-        document.getElementById('preview').src = event.target.result;
-        document.getElementById('preview').style.display = 'block';
-      };
-      reader.readAsDataURL(e.target.files[0]);
-    });
-
-    renderStory(currentNode);
-  </script>
 </body>
 </html>
