@@ -1,162 +1,225 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-TW">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>網站開發方案試算</title>
-<style>
-  body {
-    background-color: #111827;
-    color: #e0f2fe;
-    font-family: 'Segoe UI', sans-serif;
-    max-width: 600px;
-    margin: 40px auto;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 0 30px rgba(0,255,255,0.1);
-  }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>科技藍黑風首頁</title>
+  <style>
+    :root {
+      --bg-color: #0a0f1a;
+      --text-color: #e0e0e0;
+      --primary-color: #00aaff;
+      --input-bg: #1e2d3d;
+      --box-bg: #101828;
+    }
 
-  h2 {
-    text-align: center;
-    color: #7dd3fc;
-  }
+    [data-theme="light"] {
+      --bg-color: #f4f6f8;
+      --text-color: #111;
+      --primary-color: #0077cc;
+      --input-bg: #ffffff;
+      --box-bg: #e9f1f5;
+    }
 
-  label {
-    margin-top: 15px;
-    display: block;
-    font-weight: bold;
-  }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      transition: all 0.3s ease;
+    }
 
-  select {
-    width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    font-size: 16px;
-    background-color: #1f2937;
-    color: #e0f2fe;
-    border: 1px solid #38bdf8;
-    border-radius: 6px;
-  }
+    #bg-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: -1;
+    }
 
-  .plan-details {
-    background: #1e293b;
-    padding: 12px;
-    border-radius: 8px;
-    margin-top: 15px;
-    border-left: 4px solid #38bdf8;
-  }
+    header {
+      text-align: center;
+      padding: 1rem;
+      background-color: rgba(0, 0, 0, 0.7);
+      color: var(--primary-color);
+      font-size: 1.5rem;
+      letter-spacing: 2px;
+      position: relative;
+    }
 
-  .result {
-    margin-top: 30px;
-    background-color: #1e2a40;
-    padding: 20px;
-    border-radius: 8px;
-    border: 1px dashed #7dd3fc;
-  }
+    .theme-toggle {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      background: var(--primary-color);
+      border: none;
+      color: #000;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
 
-  .result p {
-    margin: 8px 0;
-    font-size: 16px;
-  }
+    .carousel {
+      position: relative;
+      max-width: 100%;
+      height: 200px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
 
-  .highlight {
-    font-size: 20px;
-    color: #38f2ff;
-    font-weight: bold;
-  }
-</style>
+    .slides {
+      display: flex;
+      width: 300%;
+      animation: slide 54s infinite;
+    }
+
+    .slides img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+
+    @keyframes slide {
+      0% { transform: translateX(0); }
+      33% { transform: translateX(-100%); }
+      66% { transform: translateX(-200%); }
+      100% { transform: translateX(0); }
+    }
+
+    .login-box {
+      background-color: var(--box-bg);
+      max-width: 400px;
+      margin: 2rem auto;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 20px var(--primary-color);
+    }
+
+    .login-box h2 {
+      text-align: center;
+      margin-bottom: 1rem;
+      color: var(--primary-color);
+    }
+
+    .login-box input {
+      width: 100%;
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+      border: none;
+      border-radius: 5px;
+      background-color: var(--input-bg);
+      color: var(--text-color);
+    }
+
+    .login-box button {
+      width: 100%;
+      padding: 0.75rem;
+      border: none;
+      border-radius: 5px;
+      background-color: var(--primary-color);
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .login-box button:hover {
+      background-color: #0088cc;
+    }
+
+    @media (max-width: 600px) {
+      .carousel { height: 150px; }
+      .slides img { height: 150px; }
+      .login-box { margin: 1rem; padding: 1.5rem; }
+    }
+  </style>
 </head>
 <body>
 
-<h2>💻 網站開發費用試算</h2>
+  <canvas id="bg-canvas"></canvas>
 
-<label for="plan">請選擇方案：</label>
-<select id="plan">
-  <option value="A">A 方案（NT$ 15,000）</option>
-  <option value="B">B 方案（NT$ 25,000）</option>
-  <option value="C">C 方案（NT$ 45,000）</option>
-</select>
+  <header>
+    科技風藍黑首頁
+    <button class="theme-toggle" onclick="toggleTheme()">切換主題</button>
+  </header>
 
-<div class="plan-details" id="planDescription">
-  👉 選擇方案後，這裡會顯示開發內容說明。
-</div>
+  <div class="carousel">
+    <div class="slides">
+      <img src="https://picsum.photos/800/200?random=1" alt="Slide 1">
+      <img src="https://picsum.photos/800/200?random=2" alt="Slide 2">
+      <img src="https://picsum.photos/800/200?random=3" alt="Slide 3">
+    </div>
+  </div>
 
-<label for="discount">折扣選擇：</label>
-<select id="discount">
-  <option value="1">無折扣（100%）</option>
-  <option value="0.9">9 折（90%）</option>
-  <option value="0.85">85 折（85%）</option>
-  <option value="0.8">8 折（80%）</option>
-</select>
+  <div class="login-box">
+    <h2>登入</h2>
+    <input type="text" placeholder="帳號" id="username" />
+    <input type="password" placeholder="密碼" id="password" />
+    <button onclick="login()">送出</button>
+  </div>
 
-<label for="shipping">交付管理費（元）：</label>
-<select id="shipping">
-  <option value="0">免收</option>
-  <option value="200">NT$200</option>
-  <option value="500">NT$500（含部署 + 技術驗收）</option>
-</select>
-
-<div class="result" id="result">
-  <p>原價：NT$ <span id="originalPrice">15000</span></p>
-  <p>折扣後：NT$ <span id="discountedPrice">15000</span></p>
-  <p>節省金額：NT$ <span id="savedAmount">0</span></p>
-  <p>運費：NT$ <span id="shippingCost">0</span></p>
-  <hr />
-  <p class="highlight">總計：NT$ <span id="finalTotal">15000</span></p>
-</div>
-
-<script>
-  const planSelect = document.getElementById('plan');
-  const discountSelect = document.getElementById('discount');
-  const shippingSelect = document.getElementById('shipping');
-
-  const planDescription = document.getElementById('planDescription');
-  const originalPrice = document.getElementById('originalPrice');
-  const discountedPrice = document.getElementById('discountedPrice');
-  const savedAmount = document.getElementById('savedAmount');
-  const shippingCost = document.getElementById('shippingCost');
-  const finalTotal = document.getElementById('finalTotal');
-
-  const planData = {
-    A: {
-      price: 15000,
-      desc: `📄 單頁形象網站：RWD 設計、靜態頁面、表單提交、簡單佈局。適合小型品牌快速上線。`
-    },
-    B: {
-      price: 25000,
-      desc: `📁 中型企業官網：多頁結構（約5頁）、後台管理系統、RWD 響應式設計、部落格模組、聯絡功能。`
-    },
-    C: {
-      price: 45000,
-      desc: `🛒 客製化平台 / 電商：完整前後台、會員系統、訂單處理、API 串接、後台數據管理。`
+  <script>
+    function login() {
+      const user = document.getElementById("username").value;
+      const pass = document.getElementById("password").value;
+      if (!user || !pass) {
+        alert("請填入帳號與密碼");
+        return;
+      }
+      alert(`帳號：${user}\n登入成功`);
     }
-  };
 
-  function update() {
-    const selectedPlan = planSelect.value;
-    const discountRate = parseFloat(discountSelect.value);
-    const shippingFee = parseFloat(shippingSelect.value);
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute("data-theme");
+      document.documentElement.setAttribute("data-theme", current === "light" ? "dark" : "light");
+    }
 
-    const plan = planData[selectedPlan];
-    const price = plan.price;
-    const discounted = price * discountRate;
-    const saved = price - discounted;
-    const total = discounted + shippingFee;
+    document.documentElement.setAttribute("data-theme", "dark");
+  </script>
 
-    planDescription.textContent = plan.desc;
-    originalPrice.textContent = price.toLocaleString();
-    discountedPrice.textContent = discounted.toLocaleString(undefined, {maximumFractionDigits: 0});
-    savedAmount.textContent = saved.toLocaleString(undefined, {maximumFractionDigits: 0});
-    shippingCost.textContent = shippingFee.toLocaleString();
-    finalTotal.textContent = total.toLocaleString(undefined, {maximumFractionDigits: 0});
-  }
+  <script>
+    // 粒子背景動畫
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
 
-  planSelect.addEventListener('change', update);
-  discountSelect.addEventListener('change', update);
-  shippingSelect.addEventListener('change', update);
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
 
-  update(); // 初始化
-</script>
+    function initParticles(count) {
+      particles = [];
+      for (let i = 0; i < count; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          vx: (Math.random() - 0.5) * 0.7,
+          vy: (Math.random() - 0.5) * 0.7,
+          radius: Math.random() * 2 + 1
+        });
+      }
+    }
 
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#00aaff88';
+      particles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      requestAnimationFrame(animateParticles);
+    }
+
+    initParticles(100);
+    animateParticles();
+  </script>
 </body>
 </html>
